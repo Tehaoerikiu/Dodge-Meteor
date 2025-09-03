@@ -1,0 +1,22 @@
+[
+    {
+        "question": "Apa nama planet tempat kita tinggal?",
+        "options": ["Mars", "Bumi", "Venus", "Jupiter"],
+        "answer": "Bumi"
+      },
+      {
+        "question": "Apa yang bersinar di langit saat siang hari?",
+        "options": ["Bulan", "Bintang", "Matahari", "Awan"],
+        "answer": "Matahari"
+      },
+      {
+        "question": "Benda langit yang mengelilingi Bumi adalah...",
+        "options": ["Mars", "Matahari", "Bulan", "Saturnus"],
+        "answer": "Bulan"
+      },
+      {
+        "question": "Planet mana yang paling dekat dengan Matahari?",
+        "options": ["Venus", "Merkurius", "Mars", "Neptunus"],
+        "answer": "Merkurius"
+      }
+]
