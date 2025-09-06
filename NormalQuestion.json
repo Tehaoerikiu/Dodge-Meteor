@@ -1,0 +1,42 @@
+[
+    {
+        "question": "Apa nama alat untuk melihat bintang dan planet?",
+        "options": [
+            "Mikroskop",
+            "Teleskop",
+            "Periskop",
+            "Kompas"
+        ],
+        "answer": "Teleskop"
+    },
+    {
+        "question": "Planet yang memiliki cincin besar adalah...",
+        "options": [
+            "Saturnus",
+            "Uranus",
+            "Mars",
+            "Bumi"
+        ],
+        "answer": "Saturnus"
+    },
+    {
+        "question": "Bintang terbesar di tata surya kita adalah...",
+        "options": [
+            "Matahari",
+            "Sirius",
+            "Polaris",
+            "Betelgeuse"
+        ],
+        "answer": "Matahari"
+    },
+    {
+        "question": "Apa nama lapisan udara yang menyelimuti Bumi?",
+        "options": [
+            "Atmosfer",
+            "Stratosfer",
+            "Litosfer",
+            "Hidrosfer"
+        ],
+        "answer": "Atmosfer"
+    }
+]
