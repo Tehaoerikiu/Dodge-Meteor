@@ -1,0 +1,42 @@
+[
+    {
+        "question": "Apa nama galaksi tempat Bumi berada?",
+        "options": [
+            "Andromeda",
+            "Bimasakti",
+            "Sombrero",
+            "Centaurus A"
+        ],
+        "answer": "Bimasakti"
+    },
+    {
+        "question": "Planet mana yang disebut 'planet merah'?",
+        "options": [
+            "Mars",
+            "Venus",
+            "Jupiter",
+            "Uranus"
+        ],
+        "answer": "Mars"
+    },
+    {
+        "question": "Apa nama benda langit yang jatuh ke Bumi dan terbakar di atmosfer?",
+        "options": [
+            "Asteroid",
+            "Meteor",
+            "Komet",
+            "Planet"
+        ],
+        "answer": "Meteor"
+    },
+    {
+        "question": "Gas utama yang ditemukan di atmosfer Bumi adalah...",
+        "options": [
+            "Oksigen",
+            "Karbon Dioksida",
+            "Nitrogen",
+            "Hidrogen"
+        ],
+        "answer": "Nitrogen"
+    }
+]
