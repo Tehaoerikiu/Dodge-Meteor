@@ -1,5 +1,5 @@
 {
-  "firstLayout": "",
+  "firstLayout": "Home",
   "gdVersion": {
     "build": 239,
     "major": 5,
@@ -4195,11 +4195,6 @@
   ],
   "variables": [
     {
-      "name": "MusicVolume",
-      "type": "number",
-      "value": 100
-    },
-    {
       "name": "SceneTarget",
       "type": "string",
       "value": ""
@@ -4228,6 +4223,42 @@
       "name": "LevelUnlocked",
       "type": "number",
       "value": 1
+    },
+    {
+      "name": "Setting",
+      "type": "structure",
+      "children": [
+        {
+          "name": "MusicVolume",
+          "type": "number",
+          "value": 50
+        },
+        {
+          "name": "SoundON",
+          "type": "number",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "TempLoad",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "StarsAmount1",
+      "type": "number",
+      "value": 0
+    },
+    {
+      "name": "StarsAmount2",
+      "type": "number",
+      "value": 0
+    },
+    {
+      "name": "StarsAmount3",
+      "type": "number",
+      "value": 0
     }
   ],
   "layouts": [
@@ -5342,6 +5373,15 @@
                     "",
                     "Lv3Temp"
                   ]
+                },
+                {
+                  "type": {
+                    "value": "PrioritizeLoadingOfScene"
+                  },
+                  "parameters": [
+                    "",
+                    "\"Settings\""
+                  ]
                 }
               ]
             },
@@ -5519,6 +5559,15 @@
                     "ButtonFSM",
                     ""
                   ]
+                },
+                {
+                  "type": {
+                    "value": "AreSceneAssetsLoaded"
+                  },
+                  "parameters": [
+                    "",
+                    "\"Settings\""
+                  ]
                 }
               ],
               "actions": [
@@ -5598,7 +5647,7 @@
                     "value": "SetNumberVariable"
                   },
                   "parameters": [
-                    "Level1Correct",
+                    "StarsAmount1",
                     "=",
                     "0"
                   ]
@@ -5608,7 +5657,7 @@
                     "value": "SetNumberVariable"
                   },
                   "parameters": [
-                    "Level2Correct",
+                    "StarsAmount2",
                     "=",
                     "0"
                   ]
@@ -5618,7 +5667,7 @@
                     "value": "SetNumberVariable"
                   },
                   "parameters": [
-                    "Level3Correct",
+                    "StarsAmount3",
                     "=",
                     "0"
                   ]
@@ -5962,11 +6011,17 @@
         "gridColor": 10401023,
         "gridAlpha": 0.8,
         "snap": false,
-        "zoomFactor": 0.6040838749988866,
+        "zoomFactor": 0.7619362677197599,
         "windowMask": false
       },
       "objectsGroups": [],
-      "variables": [],
+      "variables": [
+        {
+          "name": "Temp",
+          "type": "number",
+          "value": 0
+        }
+      ],
       "instances": [
         {
           "angle": 0,
@@ -6311,40 +6366,106 @@
           "actions": [
             {
               "type": {
-                "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+                "value": "ReadStringFromStorage"
               },
               "parameters": [
-                "Volume_slider",
-                "=",
-                "MusicVolume",
-                ""
+                "\"Settings\"",
+                "\"Setting\"",
+                "",
+                "TempLoad"
               ]
             },
             {
               "type": {
-                "value": "SpriteToggleSwitch::SpriteToggleSwitch::SetChecked"
+                "value": "JSONToVariableStructure2"
               },
               "parameters": [
-                "Sound_Switch",
-                "no",
-                ""
+                "TempLoad",
+                "Setting"
               ]
             }
-          ]
-        },
-        {
-          "type": "BuiltinCommonInstructions::Standard",
-          "conditions": [],
-          "actions": [
+          ],
+          "events": [
             {
-              "type": {
-                "value": "SetNumberVariable"
-              },
-              "parameters": [
-                "MusicVolume",
-                "=",
-                "Volume_slider.Value()"
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "NumberVariable"
+                  },
+                  "parameters": [
+                    "Setting.SoundON",
+                    "=",
+                    "1"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SpriteToggleSwitch::SpriteToggleSwitch::SetChecked"
+                  },
+                  "parameters": [
+                    "Sound_Switch",
+                    "yes",
+                    ""
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+                  },
+                  "parameters": [
+                    "Volume_slider",
+                    "=",
+                    "Setting.MusicVolume",
+                    ""
+                  ]
+                }
               ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "NumberVariable"
+                  },
+                  "parameters": [
+                    "Setting.SoundON",
+                    "=",
+                    "0"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SpriteToggleSwitch::SpriteToggleSwitch::SetChecked"
+                  },
+                  "parameters": [
+                    "Sound_Switch",
+                    "no",
+                    ""
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+                  },
+                  "parameters": [
+                    "Volume_slider",
+                    "=",
+                    "0",
+                    ""
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [],
+              "actions": []
             }
           ]
         },
@@ -6361,7 +6482,18 @@
               ]
             }
           ],
-          "actions": []
+          "actions": [
+            {
+              "type": {
+                "value": "SetNumberVariable"
+              },
+              "parameters": [
+                "Setting.SoundON",
+                "=",
+                "1"
+              ]
+            }
+          ]
         },
         {
           "type": "BuiltinCommonInstructions::Standard",
@@ -6377,7 +6509,45 @@
               ]
             }
           ],
-          "actions": []
+          "actions": [
+            {
+              "type": {
+                "value": "SetNumberVariable"
+              },
+              "parameters": [
+                "Setting.SoundON",
+                "=",
+                "0"
+              ]
+            },
+            {
+              "type": {
+                "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+              },
+              "parameters": [
+                "Volume_slider",
+                "=",
+                "0",
+                ""
+              ]
+            }
+          ]
+        },
+        {
+          "type": "BuiltinCommonInstructions::Standard",
+          "conditions": [],
+          "actions": [
+            {
+              "type": {
+                "value": "SetNumberVariable"
+              },
+              "parameters": [
+                "Setting.MusicVolume",
+                "=",
+                "Volume_slider.Value()"
+              ]
+            }
+          ]
         },
         {
           "type": "BuiltinCommonInstructions::Standard",
@@ -6396,12 +6566,49 @@
           "actions": [
             {
               "type": {
-                "value": "Scene"
+                "value": "PrioritizeLoadingOfScene"
               },
               "parameters": [
                 "",
-                "\"Home\"",
-                ""
+                "\"Home\""
+              ]
+            },
+            {
+              "type": {
+                "value": "EcrireFichierTxt"
+              },
+              "parameters": [
+                "\"Settings\"",
+                "\"Setting\"",
+                "ToJSON(Setting)"
+              ]
+            }
+          ],
+          "events": [
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "AreSceneAssetsLoaded"
+                  },
+                  "parameters": [
+                    "",
+                    "\"Home\""
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "Scene"
+                  },
+                  "parameters": [
+                    "",
+                    "\"Home\"",
+                    ""
+                  ]
+                }
               ]
             }
           ]
@@ -10116,7 +10323,7 @@
         "gridColor": 10401023,
         "gridAlpha": 0.8,
         "snap": false,
-        "zoomFactor": 0.39251611754882937,
+        "zoomFactor": 0.26364576737708484,
         "windowMask": false
       },
       "objectsGroups": [],
@@ -10187,8 +10394,8 @@
           "layer": "",
           "name": "Spawner",
           "persistentUuid": "c33bb7f5-f270-41ef-acc6-cbe2d5cf3962",
-          "width": 1230,
-          "x": 4,
+          "width": 1030,
+          "x": 110,
           "y": -203,
           "zOrder": 2,
           "numberProperties": [],
@@ -11208,6 +11415,26 @@
           "actions": [
             {
               "type": {
+                "value": "ReadStringFromStorage"
+              },
+              "parameters": [
+                "\"Settings\"",
+                "\"Setting\"",
+                "",
+                "TempLoad"
+              ]
+            },
+            {
+              "type": {
+                "value": "JSONToVariableStructure2"
+              },
+              "parameters": [
+                "TempLoad",
+                "Setting"
+              ]
+            },
+            {
+              "type": {
                 "value": "ResetTimer"
               },
               "parameters": [
@@ -11382,6 +11609,53 @@
               },
               "parameters": [
                 "Plus_1"
+              ]
+            }
+          ],
+          "events": [
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "NumberVariable"
+                  },
+                  "parameters": [
+                    "Setting.SoundON",
+                    "=",
+                    "0"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+                  },
+                  "parameters": [
+                    "Volume_slider",
+                    "=",
+                    "0",
+                    ""
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "BuiltinCommonInstructions::Standard",
+          "conditions": [],
+          "actions": [
+            {
+              "type": {
+                "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+              },
+              "parameters": [
+                "Volume_slider",
+                "=",
+                "Setting.MusicVolume",
+                ""
               ]
             }
           ]
@@ -12284,6 +12558,16 @@
                     "Pause",
                     "ButtonFSM",
                     "yes"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "EcrireFichierTxt"
+                  },
+                  "parameters": [
+                    "\"Settings\"",
+                    "\"Setting\"",
+                    "ToJSON(Setting)"
                   ]
                 }
               ]
@@ -13563,36 +13847,6 @@
                     "value": "SetNumberVariable"
                   },
                   "parameters": [
-                    "LevelUnlocked",
-                    "+",
-                    "1"
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "EcrireFichierExp"
-                  },
-                  "parameters": [
-                    "\"Storage\"",
-                    "\"Level\"",
-                    "LevelUnlocked"
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "EcrireFichierExp"
-                  },
-                  "parameters": [
-                    "\"Level_1\"",
-                    "\"Corrected\"",
-                    "Level1Correct"
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "SetNumberVariable"
-                  },
-                  "parameters": [
                     "Step",
                     "=",
                     "0"
@@ -13626,6 +13880,139 @@
                     ""
                   ]
                 }
+              ],
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "NumberVariable"
+                      },
+                      "parameters": [
+                        "Level1Correct",
+                        ">",
+                        "StarsAmount1"
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberVariable"
+                      },
+                      "parameters": [
+                        "StarsAmount1",
+                        "=",
+                        "Level1Correct"
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "EcrireFichierExp"
+                      },
+                      "parameters": [
+                        "\"Level_1\"",
+                        "\"Corrected\"",
+                        "StarsAmount1"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "ButtonStates::ButtonFSM::IsClicked"
+                  },
+                  "parameters": [
+                    "Next_Level",
+                    "ButtonFSM",
+                    ""
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "NumberVariable"
+                  },
+                  "parameters": [
+                    "LevelUnlocked",
+                    "<=",
+                    "1"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SetNumberVariable"
+                  },
+                  "parameters": [
+                    "LevelUnlocked",
+                    "+",
+                    "1"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "EcrireFichierExp"
+                  },
+                  "parameters": [
+                    "\"Storage\"",
+                    "\"Level\"",
+                    "LevelUnlocked"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "ButtonStates::ButtonFSM::IsClicked"
+                  },
+                  "parameters": [
+                    "Home",
+                    "ButtonFSM",
+                    ""
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "NumberVariable"
+                  },
+                  "parameters": [
+                    "LevelUnlocked",
+                    "<=",
+                    "1"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SetNumberVariable"
+                  },
+                  "parameters": [
+                    "LevelUnlocked",
+                    "+",
+                    "1"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "EcrireFichierExp"
+                  },
+                  "parameters": [
+                    "\"Storage\"",
+                    "\"Level\"",
+                    "LevelUnlocked"
+                  ]
+                }
               ]
             },
             {
@@ -13655,12 +14042,59 @@
                 },
                 {
                   "type": {
+                    "value": "Wait"
+                  },
+                  "parameters": [
+                    "0.2"
+                  ]
+                },
+                {
+                  "type": {
                     "value": "Scene"
                   },
                   "parameters": [
                     "",
                     "\"LoadingScene\"",
                     ""
+                  ]
+                }
+              ],
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "NumberVariable"
+                      },
+                      "parameters": [
+                        "Level1Correct",
+                        ">",
+                        "StarsAmount1"
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberVariable"
+                      },
+                      "parameters": [
+                        "StarsAmount1",
+                        "=",
+                        "Level1Correct"
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "EcrireFichierExp"
+                      },
+                      "parameters": [
+                        "\"Level_1\"",
+                        "\"Corrected\"",
+                        "StarsAmount1"
+                      ]
+                    }
                   ]
                 }
               ]
@@ -13696,6 +14130,7 @@
           ]
         },
         {
+          "folded": true,
           "type": "BuiltinCommonInstructions::Standard",
           "conditions": [
             {
@@ -13737,6 +14172,7 @@
           ]
         },
         {
+          "folded": true,
           "type": "BuiltinCommonInstructions::Standard",
           "conditions": [
             {
@@ -13793,6 +14229,7 @@
           "colorG": 64,
           "colorR": 45,
           "creationTime": 0,
+          "folded": true,
           "name": "Lose",
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
@@ -14556,8 +14993,8 @@
           "layer": "",
           "name": "Spawner",
           "persistentUuid": "73e8a88b-1548-47cd-b3a0-9d87740ba716",
-          "width": 1230,
-          "x": 4,
+          "width": 1030,
+          "x": 110,
           "y": -203,
           "zOrder": 6,
           "numberProperties": [],
@@ -15437,6 +15874,26 @@
           "actions": [
             {
               "type": {
+                "value": "ReadStringFromStorage"
+              },
+              "parameters": [
+                "\"Settings\"",
+                "\"Setting\"",
+                "",
+                "TempLoad"
+              ]
+            },
+            {
+              "type": {
+                "value": "JSONToVariableStructure2"
+              },
+              "parameters": [
+                "TempLoad",
+                "Setting"
+              ]
+            },
+            {
+              "type": {
                 "value": "ResetTimer"
               },
               "parameters": [
@@ -15611,6 +16068,64 @@
               },
               "parameters": [
                 "Plus_1"
+              ]
+            }
+          ],
+          "events": [
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "NumberVariable"
+                  },
+                  "parameters": [
+                    "Setting.SoundON",
+                    "=",
+                    "1"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+                  },
+                  "parameters": [
+                    "Volume_slider",
+                    "=",
+                    "Setting.MusicVolume",
+                    ""
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "BuiltinCommonInstructions::Standard",
+          "conditions": [
+            {
+              "type": {
+                "value": "NumberVariable"
+              },
+              "parameters": [
+                "Setting.SoundON",
+                "=",
+                "0"
+              ]
+            }
+          ],
+          "actions": [
+            {
+              "type": {
+                "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+              },
+              "parameters": [
+                "Volume_slider",
+                "=",
+                "0",
+                ""
               ]
             }
           ]
@@ -16125,6 +16640,56 @@
                     "ButtonFSM",
                     "no"
                   ]
+                },
+                {
+                  "type": {
+                    "value": "ReadStringFromStorage"
+                  },
+                  "parameters": [
+                    "\"Settings\"",
+                    "\"Setting\"",
+                    "",
+                    "TempLoad"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "JSONToVariableStructure2"
+                  },
+                  "parameters": [
+                    "TempLoad",
+                    "Setting"
+                  ]
+                }
+              ],
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "NumberVariable"
+                      },
+                      "parameters": [
+                        "Setting.SoundON",
+                        "=",
+                        "1"
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+                      },
+                      "parameters": [
+                        "Volume_slider",
+                        "=",
+                        "Setting.MusicVolume",
+                        ""
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -16384,6 +16949,26 @@
                     "Pause",
                     "ButtonFSM",
                     "yes"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "SetNumberVariable"
+                  },
+                  "parameters": [
+                    "Setting.MusicVolume",
+                    "=",
+                    "Volume_slider.Value()"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "EcrireFichierTxt"
+                  },
+                  "parameters": [
+                    "\"Settings\"",
+                    "\"Setting\"",
+                    "ToJSON(Setting)"
                   ]
                 }
               ]
@@ -17691,36 +18276,6 @@
                     "value": "SetNumberVariable"
                   },
                   "parameters": [
-                    "LevelUnlocked",
-                    "+",
-                    "1"
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "EcrireFichierExp"
-                  },
-                  "parameters": [
-                    "\"Storage\"",
-                    "\"Level\"",
-                    "LevelUnlocked"
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "EcrireFichierExp"
-                  },
-                  "parameters": [
-                    "\"Level_2\"",
-                    "\"CorrectedLv2\"",
-                    "Level2Correct"
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "SetNumberVariable"
-                  },
-                  "parameters": [
                     "Step",
                     "=",
                     "0"
@@ -17754,6 +18309,139 @@
                     ""
                   ]
                 }
+              ],
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "NumberVariable"
+                      },
+                      "parameters": [
+                        "Level2Correct",
+                        ">",
+                        "StarsAmount2"
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberVariable"
+                      },
+                      "parameters": [
+                        "StarsAmount2",
+                        "=",
+                        "Level2Correct"
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "EcrireFichierExp"
+                      },
+                      "parameters": [
+                        "\"Level_2\"",
+                        "\"Corrected\"",
+                        "StarsAmount2"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "ButtonStates::ButtonFSM::IsClicked"
+                  },
+                  "parameters": [
+                    "Next_Level",
+                    "ButtonFSM",
+                    ""
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "NumberVariable"
+                  },
+                  "parameters": [
+                    "LevelUnlocked",
+                    "<=",
+                    "1"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SetNumberVariable"
+                  },
+                  "parameters": [
+                    "LevelUnlocked",
+                    "+",
+                    "1"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "EcrireFichierExp"
+                  },
+                  "parameters": [
+                    "\"Storage\"",
+                    "\"Level\"",
+                    "LevelUnlocked"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "ButtonStates::ButtonFSM::IsClicked"
+                  },
+                  "parameters": [
+                    "Home",
+                    "ButtonFSM",
+                    ""
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "NumberVariable"
+                  },
+                  "parameters": [
+                    "LevelUnlocked",
+                    "<=",
+                    "1"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SetNumberVariable"
+                  },
+                  "parameters": [
+                    "LevelUnlocked",
+                    "+",
+                    "1"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "EcrireFichierExp"
+                  },
+                  "parameters": [
+                    "\"Storage\"",
+                    "\"Level\"",
+                    "LevelUnlocked"
+                  ]
+                }
               ]
             },
             {
@@ -17783,12 +18471,59 @@
                 },
                 {
                   "type": {
+                    "value": "Wait"
+                  },
+                  "parameters": [
+                    "0.2"
+                  ]
+                },
+                {
+                  "type": {
                     "value": "Scene"
                   },
                   "parameters": [
                     "",
                     "\"LoadingScene\"",
                     ""
+                  ]
+                }
+              ],
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "NumberVariable"
+                      },
+                      "parameters": [
+                        "Level2Correct",
+                        ">",
+                        "StarsAmount2"
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberVariable"
+                      },
+                      "parameters": [
+                        "StarsAmount2",
+                        "=",
+                        "Level2Correct"
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "EcrireFichierExp"
+                      },
+                      "parameters": [
+                        "\"Level_2\"",
+                        "\"Corrected\"",
+                        "StarsAmount2"
+                      ]
+                    }
                   ]
                 }
               ]
@@ -18615,8 +19350,8 @@
           "layer": "",
           "name": "Spawner",
           "persistentUuid": "60290b5b-706f-4cf2-98b3-ea3364e04069",
-          "width": 1230,
-          "x": 4,
+          "width": 1030,
+          "x": 110,
           "y": -203,
           "zOrder": 5,
           "numberProperties": [],
@@ -19495,6 +20230,26 @@
           "actions": [
             {
               "type": {
+                "value": "ReadStringFromStorage"
+              },
+              "parameters": [
+                "\"Settings\"",
+                "\"Setting\"",
+                "",
+                "TempLoad"
+              ]
+            },
+            {
+              "type": {
+                "value": "JSONToVariableStructure2"
+              },
+              "parameters": [
+                "TempLoad",
+                "Setting"
+              ]
+            },
+            {
+              "type": {
                 "value": "ResetTimer"
               },
               "parameters": [
@@ -19669,6 +20424,53 @@
               },
               "parameters": [
                 "Plus_1"
+              ]
+            }
+          ],
+          "events": [
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "NumberVariable"
+                  },
+                  "parameters": [
+                    "Setting.SoundON",
+                    "=",
+                    "0"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+                  },
+                  "parameters": [
+                    "Volume_slider",
+                    "=",
+                    "0",
+                    ""
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "BuiltinCommonInstructions::Standard",
+          "conditions": [],
+          "actions": [
+            {
+              "type": {
+                "value": "PanelSpriteSlider::PanelSpriteSlider::SetValue"
+              },
+              "parameters": [
+                "Volume_slider",
+                "=",
+                "Setting.MusicVolume",
+                ""
               ]
             }
           ]
@@ -21711,16 +22513,6 @@
                     "ButtonFSM",
                     ""
                   ]
-                },
-                {
-                  "type": {
-                    "value": "NumberVariable"
-                  },
-                  "parameters": [
-                    "LevelUnlocked",
-                    "=",
-                    "3"
-                  ]
                 }
               ],
               "actions": [
@@ -21742,16 +22534,6 @@
                     "\"Storage\"",
                     "\"Level\"",
                     "LevelUnlocked"
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "EcrireFichierExp"
-                  },
-                  "parameters": [
-                    "\"Level_3\"",
-                    "\"CorrectedLv3\"",
-                    "Level3Correct"
                   ]
                 },
                 {
@@ -21790,6 +22572,45 @@
                     "",
                     "\"LoadingScene\"",
                     ""
+                  ]
+                }
+              ],
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "NumberVariable"
+                      },
+                      "parameters": [
+                        "Level3Correct",
+                        ">",
+                        "StarsAmount3"
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberVariable"
+                      },
+                      "parameters": [
+                        "StarsAmount3",
+                        "=",
+                        "Level3Correct"
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "EcrireFichierExp"
+                      },
+                      "parameters": [
+                        "\"Level_3\"",
+                        "\"Corrected\"",
+                        "StarsAmount3"
+                      ]
+                    }
                   ]
                 }
               ]
